@@ -213,7 +213,6 @@ object MainForm: TMainForm
         Max = 32000
         TabOrder = 4
         Wrap = True
-        OnChangingEx = TimeH1UDChangingEx
       end
       object TimeY2: TEdit
         Left = 164
@@ -231,7 +230,6 @@ object MainForm: TMainForm
         Min = -32000
         Max = 32000
         TabOrder = 7
-        OnChangingEx = TimeY2UDChangingEx
       end
       object TimeH2: TEdit
         Left = 246
@@ -250,7 +248,6 @@ object MainForm: TMainForm
         Max = 32000
         TabOrder = 9
         Wrap = True
-        OnChangingEx = TimeH2UDChangingEx
       end
       object TimeIntF: TCheckBox
         Left = 324
@@ -287,7 +284,6 @@ object MainForm: TMainForm
         Max = 32000
         TabOrder = 2
         Wrap = True
-        OnChangingEx = TimeY1UDChangingEx
       end
       object TimeInt: TComboBox
         Left = 324
@@ -789,7 +785,7 @@ object MainForm: TMainForm
       OnClick = BtnOptionClick
     end
     object BtnExec: TButton
-      Left = 297
+      Left = 299
       Top = 2
       Width = 73
       Height = 23
@@ -815,13 +811,13 @@ object MainForm: TMainForm
       '*.clk*|SBAS Log (*.sbs,*.ems)|*.sbs;*.ems|IONEX (*.*i,*.ionex)|*' +
       '.*i;*.ionex'
     Options = [ofHideReadOnly, ofNoChangeDir, ofAllowMultiSelect, ofEnableSizing]
-    Left = 354
-    Top = 254
+    Left = 362
+    Top = 198
   end
   object SaveDialog: TSaveDialog
     Filter = 'All Files (*.*)|*.*|Position Files (*.pos)|*.pos'
     Options = [ofHideReadOnly, ofNoChangeDir, ofEnableSizing]
-    Left = 326
-    Top = 254
+    Left = 310
+    Top = 174
   end
 end

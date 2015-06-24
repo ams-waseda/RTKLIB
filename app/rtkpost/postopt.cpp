@@ -371,8 +371,9 @@ void __fastcall TOptDialog::GetOpt(void)
 	PosOpt3	     ->Checked		=MainForm->PosOpt[2];
 	PosOpt4	     ->Checked		=MainForm->PosOpt[3];
 	PosOpt5	     ->Checked		=MainForm->PosOpt[4];
+    RTKnsat      ->ItemIndex    =MainForm->rtknsat;
 //	MapFunc	     ->ItemIndex	=MainForm->MapFunc;
-	
+
 	AmbRes		 ->ItemIndex	=MainForm->AmbRes;
 	GloAmbRes	 ->ItemIndex	=MainForm->GloAmbRes;
 	BdsAmbRes	 ->ItemIndex	=MainForm->BdsAmbRes;
@@ -464,7 +465,7 @@ void __fastcall TOptDialog::SetOpt(void)
 {
 	TEdit *editu[]={RovPos1,RovPos2,RovPos3};
 	TEdit *editr[]={RefPos1,RefPos2,RefPos3};
-	
+
 	MainForm->PosMode		=PosMode	->ItemIndex;
 	MainForm->Freq			=Freq		->ItemIndex;
 	MainForm->Solution		=Solution   ->ItemIndex;
@@ -483,13 +484,15 @@ void __fastcall TOptDialog::SetOpt(void)
 	if (NavSys4->Checked) MainForm->NavSys|=SYS_QZS;
 	if (NavSys5->Checked) MainForm->NavSys|=SYS_SBS;
 	if (NavSys6->Checked) MainForm->NavSys|=SYS_CMP;
+
 	MainForm->PosOpt[0]	  	=PosOpt1	->Checked;
 	MainForm->PosOpt[1]	  	=PosOpt2	->Checked;
 	MainForm->PosOpt[2]	  	=PosOpt3	->Checked;
 	MainForm->PosOpt[3]	  	=PosOpt4	->Checked;
 	MainForm->PosOpt[4]	  	=PosOpt5	->Checked;
+    MainForm->rtknsat       =RTKnsat    ->ItemIndex;
 //	MainForm->MapFunc		=MapFunc	->ItemIndex;
-	
+
 	MainForm->AmbRes	  	=AmbRes		->ItemIndex;
 	MainForm->GloAmbRes	  	=GloAmbRes	->ItemIndex;
 	MainForm->BdsAmbRes	  	=BdsAmbRes	->ItemIndex;
@@ -548,7 +551,7 @@ void __fastcall TOptDialog::SetOpt(void)
 	MainForm->RefAntE	  =str2dbl(RefAntE	->Text);
 	MainForm->RefAntN	  =str2dbl(RefAntN	->Text);
 	MainForm->RefAntU	  =str2dbl(RefAntU	->Text);
-	
+
 	MainForm->RnxOpts1	  =RnxOpts1		->Text;
 	MainForm->RnxOpts2	  =RnxOpts2		->Text;
 	
@@ -618,6 +621,7 @@ void __fastcall TOptDialog::LoadOpt(AnsiString file)
 	PosOpt3	     ->Checked		=prcopt.posopt[2];
 	PosOpt4	     ->Checked		=prcopt.posopt[3];
 	PosOpt5	     ->Checked		=prcopt.posopt[4];
+    RTKnsat      ->ItemIndex    =MainForm->rtknsat;
 //	MapFunc	     ->ItemIndex	=prcopt.mapfunc;
 	
 	AmbRes		 ->ItemIndex	=prcopt.modear;
@@ -726,7 +730,7 @@ void __fastcall TOptDialog::SaveOpt(AnsiString file)
 	prcopt_t prcopt=prcopt_default;
 	solopt_t solopt=solopt_default;
 	filopt_t filopt={""};
-	
+
 	prcopt.mode		=PosMode	 ->ItemIndex;
 	prcopt.nf		=Freq		 ->ItemIndex+1;
 	prcopt.soltype	=Solution	 ->ItemIndex;
@@ -756,8 +760,9 @@ void __fastcall TOptDialog::SaveOpt(AnsiString file)
 	prcopt.posopt[2]=PosOpt3	->Checked;
 	prcopt.posopt[3]=PosOpt4	->Checked;
 	prcopt.posopt[4]=PosOpt5	->Checked;
+    prcopt.rtknsat  =RTKnsat    ->ItemIndex  +3;
 //	prcopt.mapfunc	=MapFunc	->ItemIndex;
-	
+
 	prcopt.modear	=AmbRes		->ItemIndex;
 	prcopt.glomodear=GloAmbRes	->ItemIndex;
 	prcopt.bdsmodear=BdsAmbRes	->ItemIndex;
@@ -794,7 +799,7 @@ void __fastcall TOptDialog::SaveOpt(AnsiString file)
 	solopt.nmeaintv[1]=str2dbl(NmeaIntv2->Text);
 	solopt.trace	=DebugTrace	 ->ItemIndex;
 	solopt.sstat	=DebugStatus ->ItemIndex;
-	
+
 	prcopt.eratio[0]=str2dbl(MeasErrR1->Text);
 	prcopt.eratio[1]=str2dbl(MeasErrR2->Text);
 	prcopt.err[1]	=str2dbl(MeasErr2->Text);
@@ -807,7 +812,7 @@ void __fastcall TOptDialog::SaveOpt(AnsiString file)
 	prcopt.prn[2]	=str2dbl(PrNoise3->Text);
 	prcopt.prn[3]	=str2dbl(PrNoise4->Text);
 	prcopt.prn[4]	=str2dbl(PrNoise5->Text);
-	
+
 	if (RovAntPcv->Checked) strcpy(prcopt.anttype[0],RovAnt_Text.c_str());
 	if (RefAntPcv->Checked) strcpy(prcopt.anttype[1],RefAnt_Text.c_str());
 	prcopt.antdel[0][0]=str2dbl(RovAntE->Text);
@@ -816,17 +821,17 @@ void __fastcall TOptDialog::SaveOpt(AnsiString file)
 	prcopt.antdel[1][0]=str2dbl(RefAntE->Text);
 	prcopt.antdel[1][1]=str2dbl(RefAntN->Text);
 	prcopt.antdel[1][2]=str2dbl(RefAntU->Text);
-	
+
 	prcopt.intpref	=IntpRefObs->ItemIndex;
 	prcopt.sbassatsel=SbasSat->Text.ToInt();
 	prcopt.rovpos=RovPosType->ItemIndex<3?0:RovPosType->ItemIndex-2;
 	prcopt.refpos=RefPosType->ItemIndex<3?0:RefPosType->ItemIndex-2;
 	if (prcopt.rovpos==0) GetPos(RovPosType->ItemIndex,editu,prcopt.ru);
 	if (prcopt.refpos==0) GetPos(RefPosType->ItemIndex,editr,prcopt.rb);
-	
+
 	strcpy(prcopt.rnxopt[0],RnxOpts1_Text.c_str());
 	strcpy(prcopt.rnxopt[1],RnxOpts2_Text.c_str());
-	
+
 	strcpy(filopt.satantp,SatPcvFile_Text.c_str());
 	strcpy(filopt.rcvantp,AntPcvFile_Text.c_str());
 	strcpy(filopt.stapos, StaPosFile_Text.c_str());
@@ -848,7 +853,7 @@ void __fastcall TOptDialog::UpdateEnable(void)
 	int rtk=PMODE_KINEMA<=PosMode->ItemIndex&&PosMode->ItemIndex<=PMODE_FIXED;
 	int ppp=PosMode->ItemIndex>=PMODE_PPP_KINEMA;
 	int ar=rtk||ppp;
-	
+
 	Freq           ->Enabled=rel;
 	Solution       ->Enabled=rel||ppp;
 	DynamicModel   ->Enabled=rel;
@@ -858,7 +863,7 @@ void __fastcall TOptDialog::UpdateEnable(void)
 	PosOpt2        ->Enabled=ppp;
 	PosOpt3        ->Enabled=ppp;
 	PosOpt4        ->Enabled=ppp;
-	
+
 	AmbRes         ->Enabled=ar;
 	GloAmbRes      ->Enabled=ar&&AmbRes->ItemIndex>0&&NavSys2->Checked;
 	BdsAmbRes      ->Enabled=ar&&AmbRes->ItemIndex>0&&NavSys6->Checked;
@@ -908,7 +913,7 @@ void __fastcall TOptDialog::UpdateEnable(void)
 	RovPos2        ->Enabled=RovPosType->Enabled&&RovPosType->ItemIndex<=2;
 	RovPos3        ->Enabled=RovPosType->Enabled&&RovPosType->ItemIndex<=2;
 	BtnRovPos      ->Enabled=RovPosType->Enabled&&RovPosType->ItemIndex<=2;
-	
+
 	RefPosType     ->Enabled=rel&&PosMode->ItemIndex!=PMODE_MOVEB;
 	RefPos1        ->Enabled=RefPosType->Enabled&&RefPosType->ItemIndex<=2;
 	RefPos2        ->Enabled=RefPosType->Enabled&&RefPosType->ItemIndex<=2;
@@ -980,7 +985,7 @@ void __fastcall TOptDialog::ReadAntList(void)
 	char *p;
 	
 	if (!readpcv(AntPcvFile_Text.c_str(),&pcvs)) return;
-	
+
 	list=new TStringList;
 	list->Add("");
 	list->Add("*");
@@ -1031,6 +1036,12 @@ void __fastcall TOptDialog::BtnMaskClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptDialog::NavSys6Click(TObject *Sender)
+{
+	UpdateEnable();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TOptDialog::RTKnsatChange(TObject *Sender)
 {
 	UpdateEnable();
 }

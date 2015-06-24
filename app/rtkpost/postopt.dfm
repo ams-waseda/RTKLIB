@@ -4,7 +4,7 @@ object OptDialog: TOptDialog
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 285
+  ClientHeight = 359
   ClientWidth = 382
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -53,8 +53,8 @@ object OptDialog: TOptDialog
     Caption = 'a'
   end
   object BtnCancel: TButton
-    Left = 306
-    Top = 262
+    Left = 305
+    Top = 335
     Width = 69
     Height = 21
     Caption = '&Cancel'
@@ -62,8 +62,8 @@ object OptDialog: TOptDialog
     TabOrder = 1
   end
   object BtnOk: TButton
-    Left = 236
-    Top = 262
+    Left = 235
+    Top = 335
     Width = 69
     Height = 21
     Caption = '&OK'
@@ -72,8 +72,8 @@ object OptDialog: TOptDialog
     OnClick = BtnOkClick
   end
   object BtnSave: TButton
-    Left = 155
-    Top = 262
+    Left = 154
+    Top = 335
     Width = 69
     Height = 21
     Caption = '&Save...'
@@ -81,8 +81,8 @@ object OptDialog: TOptDialog
     OnClick = BtnSaveClick
   end
   object BtnLoad: TButton
-    Left = 85
-    Top = 262
+    Left = 84
+    Top = 335
     Width = 69
     Height = 21
     Caption = '&Load...'
@@ -90,10 +90,10 @@ object OptDialog: TOptDialog
     OnClick = BtnLoadClick
   end
   object Misc: TPageControl
-    Left = 0
-    Top = 0
+    Left = 3
+    Top = -4
     Width = 381
-    Height = 262
+    Height = 333
     ActivePage = TabSheet1
     TabOrder = 4
     object TabSheet1: TTabSheet
@@ -153,6 +153,13 @@ object OptDialog: TOptDialog
         Width = 114
         Height = 13
         Caption = 'Troposphere Correction'
+      end
+      object Label23: TLabel
+        Left = 21
+        Top = 259
+        Width = 205
+        Height = 13
+        Caption = 'Choose minimum number of satellite  nu<='
       end
       object DynamicModel: TComboBox
         Left = 221
@@ -378,7 +385,7 @@ object OptDialog: TOptDialog
       end
       object PosOpt1: TCheckBox
         Left = 24
-        Top = 161
+        Top = 166
         Width = 62
         Height = 17
         Caption = 'Sat PCV'
@@ -424,6 +431,22 @@ object OptDialog: TOptDialog
         Height = 17
         Caption = 'RAIM FDE'
         TabOrder = 14
+      end
+      object RTKnsat: TComboBox
+        Left = 232
+        Top = 256
+        Width = 69
+        Height = 21
+        AutoComplete = False
+        Style = csDropDownList
+        TabOrder = 22
+        OnChange = RTKnsatChange
+        Items.Strings = (
+          'OFF'
+          '4'
+          '5'
+          '6'
+          '7')
       end
     end
     object TabSheet2: TTabSheet
@@ -951,10 +974,6 @@ object OptDialog: TOptDialog
     object TabSheet4: TTabSheet
       Caption = 'S&tats'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label29: TLabel
         Left = 34
         Top = 213
@@ -1430,10 +1449,6 @@ object OptDialog: TOptDialog
     object TabSheet7: TTabSheet
       Caption = '&Files'
       ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label1: TLabel
         Left = 6
         Top = 199
@@ -1960,8 +1975,8 @@ object OptDialog: TOptDialog
     end
   end
   object BtnExtOpt: TButton
-    Left = 4
-    Top = 262
+    Left = 3
+    Top = 335
     Width = 69
     Height = 21
     Caption = 'Ext Opt...'
@@ -1985,7 +2000,7 @@ object OptDialog: TOptDialog
     Filter = 'All (*.*)|*.*|Options File (*.conf)|*.conf'
     Options = [ofHideReadOnly, ofNoChangeDir, ofEnableSizing]
     Title = 'Save File'
-    Left = 343
+    Left = 351
     Top = 234
   end
 end

@@ -50,6 +50,7 @@
 
 TMainForm *MainForm;
 
+
 #define PRGNAME     "RTKPOST"
 #define MAXHIST     20
 #define GOOGLE_EARTH "C:\\Program Files\\Google\\Google Earth\\googleearth.exe"
@@ -122,7 +123,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
     MaxAgeDiff=30.0; RejectThres=30.0; RejectGdop=30.0;
     MeasErrR1=MeasErrR2=100.0; MeasErr2=0.004; MeasErr3=0.003; MeasErr4=1.0;
     SatClkStab=1E-11; ValidThresAR=3.0;
-    RovAntE=RovAntN=RovAntU=RefAntE=RefAntN=RefAntU=0.0;
+    RovAntE=RovAntN=RovAntU=RefAntE=RefAntN=RefAntU=0.0;rtknsat=4;
     for (i=0;i<3;i++) RovPos[i]=0.0;
     for (i=0;i<3;i++) RefPos[i]=0.0;
     
@@ -132,7 +133,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 void __fastcall TMainForm::FormCreate(TObject *Sender)
 {
     AnsiString s;
-    
+
     Caption=s.sprintf("%s ver.%s",PRGNAME,VER_RTKLIB);
     
     ::DragAcceptFiles(Handle,true);
@@ -274,7 +275,11 @@ void __fastcall TMainForm::BtnExecClick(TObject *Sender)
 {
     AnsiString OutputFile_Text=OutputFile->Text;
     char *p;
-    
+
+
+
+
+
     if (BtnExec->Caption=="Abort") {
         BtnExec->Enabled=false;
         return;
@@ -310,6 +315,10 @@ void __fastcall TMainForm::BtnExecClick(TObject *Sender)
     BtnPlot  ->Enabled=false;
     BtnOption->Enabled=false;
     Panel1   ->Enabled=false;
+
+
+
+
     
     if (ExecProc()>=0) {
         AddHist(InputFile1);
@@ -657,8 +666,10 @@ void __fastcall TMainForm::SetOutFile(void)
     AnsiString InputFile1_Text=InputFile1->Text;
     AnsiString OutDir_Text=OutDir->Text;
     char *p,ofile[1024],ifile[1024];
-    
-    if (InputFile1->Text=="") return;
+
+
+
+	if (InputFile1->Text=="") return;
     
     strcpy(ifile,InputFile1_Text.c_str());
     
@@ -772,7 +783,7 @@ int __fastcall TMainForm::GetOption(prcopt_t &prcopt, solopt_t &solopt,
 {
     char buff[1024],id[32],*p;
     int sat,ex;
-    
+
     // processing options
     prcopt.mode     =PosMode;
     prcopt.soltype  =Solution;
@@ -794,6 +805,7 @@ int __fastcall TMainForm::GetOption(prcopt_t &prcopt, solopt_t &solopt,
     prcopt.posopt[2]=PosOpt[2];
     prcopt.posopt[3]=PosOpt[3];
     prcopt.posopt[4]=PosOpt[4];
+    prcopt.rtknsat  =rtknsat + 3;
     prcopt.dynamics =DynamicModel;
     prcopt.tidecorr =TideCorr;
     prcopt.niter    =NumIter;
@@ -885,7 +897,7 @@ int __fastcall TMainForm::GetOption(prcopt_t &prcopt, solopt_t &solopt,
     solopt.sstat    =DebugStatus;
     solopt.trace    =DebugTrace;
     strcpy(solopt.sep,FieldSep!=""?FieldSep.c_str():" ");
-    sprintf(solopt.prog,"%s ver.%s",PRGNAME,VER_RTKLIB);
+	sprintf(solopt.prog,"%s ver.%s",PRGNAME,VER_RTKLIB);
     
     // file options
     strcpy(filopt.satantp,SatPcvFile.c_str());
@@ -1147,6 +1159,7 @@ void __fastcall TMainForm::LoadOpt(void)
     PosOpt[2]          =ini->ReadInteger("opt","posopt3",        0);
     PosOpt[3]          =ini->ReadInteger("opt","posopt4",        0);
     PosOpt[4]          =ini->ReadInteger("opt","posopt5",        0);
+    rtknsat            =ini->ReadInteger("opt","rtknsat",        0);
     MapFunc            =ini->ReadInteger("opt","mapfunc",        0);
     
     AmbRes             =ini->ReadInteger("opt","ambres",         1);
@@ -1349,6 +1362,7 @@ void __fastcall TMainForm::SaveOpt(void)
     ini->WriteInteger("opt","posopt3",     PosOpt[2]   );
     ini->WriteInteger("opt","posopt4",     PosOpt[3]   );
     ini->WriteInteger("opt","posopt5",     PosOpt[4]   );
+    ini->WriteInteger("opt","rtknsat",     rtknsat     );
     ini->WriteInteger("opt","mapfunc",     MapFunc     );
     
     ini->WriteInteger("opt","ambres",      AmbRes      );

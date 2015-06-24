@@ -1006,6 +1006,7 @@ typedef struct {        /* processing options type */
     double antdel[2][3]; /* antenna delta {{rov_e,rov_n,rov_u},{ref_e,ref_n,ref_u}} */
     pcv_t pcvr[2];      /* receiver antenna parameters {rov,base} */
     unsigned char exsats[MAXSAT]; /* excluded satellites (1:excluded,2:included) */
+    int rtknsat;
     char rnxopt[2][256]; /* rinex options {rover,base} */
     int  posopt[6];     /* positioning options */
     int  syncsol;       /* solution sync mode (0:off,1:on) */
@@ -1125,8 +1126,10 @@ typedef struct {        /* RTK control/result type */
     ssat_t ssat[MAXSAT]; /* satellite status */
     int neb;            /* bytes in error message buffer */
     char errbuf[MAXERRMSG]; /* error message buffer */
-    prcopt_t opt;       /* processing options */
+	prcopt_t opt;       /* processing options */
 } rtk_t;
+
+
 
 typedef struct {        /* receiver raw data control type */
     gtime_t time;       /* message time */

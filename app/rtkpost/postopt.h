@@ -218,6 +218,9 @@ __published:
 	TCheckBox *PosOpt5;
 	TComboBox *SyncSol;
 	TComboBox *BdsAmbRes;
+    TLabel *Label23;
+    TComboBox *RTKnsat;
+
 	void __fastcall BtnOkClick(TObject *Sender);
 	void __fastcall RovAntPcvClick(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -269,6 +272,10 @@ __published:
 	void __fastcall BtnExtOptClick(TObject *Sender);
 	void __fastcall BtnMaskClick(TObject *Sender);
 	void __fastcall NavSys6Click(TObject *Sender);
+    void __fastcall RTKnsatChange(TObject *Sender);
+
+
+
 private:
 	snrmask_t SnrMask;
 	int RovPosTypeP,RefPosTypeP;
