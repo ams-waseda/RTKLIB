@@ -4,7 +4,7 @@ object OptDialog: TOptDialog
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 359
+  ClientHeight = 344
   ClientWidth = 382
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -54,7 +54,7 @@ object OptDialog: TOptDialog
   end
   object BtnCancel: TButton
     Left = 305
-    Top = 335
+    Top = 317
     Width = 69
     Height = 21
     Caption = '&Cancel'
@@ -63,7 +63,7 @@ object OptDialog: TOptDialog
   end
   object BtnOk: TButton
     Left = 235
-    Top = 335
+    Top = 317
     Width = 69
     Height = 21
     Caption = '&OK'
@@ -73,7 +73,7 @@ object OptDialog: TOptDialog
   end
   object BtnSave: TButton
     Left = 154
-    Top = 335
+    Top = 317
     Width = 69
     Height = 21
     Caption = '&Save...'
@@ -82,7 +82,7 @@ object OptDialog: TOptDialog
   end
   object BtnLoad: TButton
     Left = 84
-    Top = 335
+    Top = 317
     Width = 69
     Height = 21
     Caption = '&Load...'
@@ -90,14 +90,15 @@ object OptDialog: TOptDialog
     OnClick = BtnLoadClick
   end
   object Misc: TPageControl
-    Left = 3
-    Top = -4
+    Left = 0
+    Top = 2
     Width = 381
-    Height = 333
-    ActivePage = TabSheet1
+    Height = 311
+    ActivePage = TabSheet2
     TabOrder = 4
     object TabSheet1: TTabSheet
       Caption = 'Setting&1'
+      ExplicitHeight = 305
       object Label3: TLabel
         Left = 24
         Top = 73
@@ -1976,7 +1977,7 @@ object OptDialog: TOptDialog
   end
   object BtnExtOpt: TButton
     Left = 3
-    Top = 335
+    Top = 317
     Width = 69
     Height = 21
     Caption = 'Ext Opt...'

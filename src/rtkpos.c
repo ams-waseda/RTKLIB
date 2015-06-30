@@ -239,7 +239,7 @@ static void outsolstat(rtk_t *rtk)
     char id[32];
     
     if (statlevel<=0||!fp_stat) return;
-    
+
     trace(3,"outsolstat:\n");
     
     /* swap solution status file */
@@ -248,7 +248,7 @@ static void outsolstat(rtk_t *rtk)
     est=rtk->opt.mode>=PMODE_DGPS;
     nfreq=est?nf:1;
     tow=time2gpst(rtk->sol.time,&week);
-    
+
     /* receiver position */
     if (est) {
         for (i=0;i<3;i++) xa[i]=i<rtk->na?rtk->xa[i]:0.0;
@@ -430,7 +430,7 @@ static void udpos(rtk_t *rtk, double tt)
 {
     double *F,*FP,*xp,pos[3],Q[9]={0},Qv[9],var=0.0;
     int i,j;
-    
+
     trace(3,"udpos   : tt=%.3f\n",tt);
     
     /* fixed mode */
@@ -441,6 +441,8 @@ static void udpos(rtk_t *rtk, double tt)
     /* initialize position for first epoch */
     if (norm(rtk->x,3)<=0.0) {
         for (i=0;i<3;i++) initx(rtk,rtk->sol.rr[i],VAR_POS,i);
+        for (i=0;i<3;i++) rtk->sol.rrbefore[i]=rtk->sol.rr[i];
+
         if (rtk->opt.dynamics) {
             for (i=3;i<6;i++) initx(rtk,rtk->sol.rr[i],VAR_VEL,i);
             for (i=6;i<9;i++) initx(rtk,1E-6,VAR_ACC,i);
@@ -448,15 +450,15 @@ static void udpos(rtk_t *rtk, double tt)
     }
     /* static mode */
     if (rtk->opt.mode==PMODE_STATIC) return;
-    
+
     /* kinmatic mode without dynamics */
     if (!rtk->opt.dynamics) {
-        for (i=0;i<3;i++) initx(rtk,rtk->sol.rr[i],VAR_POS,i);
+        for (i=0;i<3;i++) initx(rtk,rtk->sol.rrbefore[i]+rtk->sol.rr[i+3]*tt,VAR_VEL,i);
         return;
     }
     /* check variance of estimated postion */
     for (i=0;i<3;i++) var+=rtk->P[i+i*rtk->nx]; var/=3.0;
-    
+
     if (var>VAR_POS) {
         /* reset position with large variance */
         for (i=0;i<3;i++) initx(rtk,rtk->sol.rr[i],VAR_POS,i);
@@ -502,7 +504,7 @@ static void udion(rtk_t *rtk, double tt, double bl, const int *sat, int ns)
     }
     for (i=0;i<ns;i++) {
         j=II(sat[i],&rtk->opt);
-        
+
         if (rtk->x[j]==0.0) {
             initx(rtk,1E-6,SQR(rtk->opt.std[1]*bl/1E4),j);
         }
@@ -776,10 +778,14 @@ static void udbias(rtk_t *rtk, double tt, const obsd_t *obs, const int *sat,
 static void udstate(rtk_t *rtk, const obsd_t *obs, const int *sat,
                     const int *iu, const int *ir, int ns, const nav_t *nav)
 {
-    double tt=fabs(rtk->tt),bl,dr[3];
-    
+    static gtime_t time;
+    double tt,bl,dr[3];
+
     trace(3,"udstate : ns=%d\n",ns);
-    
+
+    if (norm(rtk->x,3)<=0.0) time=rtk->sol.time;
+    tt=timediff(rtk->sol.time,time);
+
     /* temporal update of position/velocity/acceleration */
 	udpos(rtk,tt);
     
@@ -800,6 +806,8 @@ static void udstate(rtk_t *rtk, const obsd_t *obs, const int *sat,
     if (rtk->opt.mode>PMODE_DGPS) {
         udbias(rtk,tt,obs,sat,iu,ir,ns,nav);
     }
+
+    time=rtk->sol.time;
 }
 /* undifferenced phase/code residual for satellite ---------------------------*/
 static void zdres_sat(int base, double r, const obsd_t *obs, const nav_t *nav,
@@ -1560,13 +1568,13 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
 			stat=SOLQ_NONE;
 			break;
 		}
-		/* kalman filter measurement update */
-		matcpy(Pp,rtk->P,rtk->nx,rtk->nx);
-		if ((info=filter(xp,Pp,H,v,R,rtk->nx,nv))) {
-			errmsg(rtk,"filter error (info=%d)\n",info);
-			stat=SOLQ_NONE;
-			break;
-		}
+ 	   	/* kalman filter measurement update */
+ 	   	matcpy(Pp,rtk->P,rtk->nx,rtk->nx);
+ 	   	if ((info=filter(xp,Pp,H,v,R,rtk->nx,nv))) {
+  	   		errmsg(rtk,"filter error (info=%d)\n",info);
+ 	   		stat=SOLQ_NONE;
+ 	   		break;
+ 	   	}
 		trace(4,"x(%d)=",i+1); tracemat(4,xp,1,NR(opt),13,4);
 	}
 	if (stat!=SOLQ_NONE&&zdres(0,obs,nu,rs,dts,svh,nav,xp,opt,0,y,e,azel)) {
@@ -1671,6 +1679,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
 	}
 	free(rs); free(dts); free(var); free(y); free(e); free(azel);
 	free(xp); free(Pp);  free(xa);  free(v); free(H); free(R); free(bias);
+
+    /* save for next epoch */
+    for(i=0;i<3;i++) {
+         rtk->sol.rrbefore[i]=rtk->sol.rr[i];
+    }
+
 
 	if (stat!=SOLQ_NONE) rtk->sol.stat=stat;
 

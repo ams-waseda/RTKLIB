@@ -852,6 +852,7 @@ typedef struct {        /* solution type */
     unsigned char ns;   /* number of valid satellites */
     float age;          /* age of differential (s) */
     float ratio;        /* AR ratio factor for valiation */
+    double rrbefore[3];
 } sol_t;
 
 typedef struct {        /* solution buffer type */
